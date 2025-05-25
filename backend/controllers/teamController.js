@@ -1,28 +1,48 @@
-// controllers/teamController.js
-const Team = require('../models/Team');
+const supabase = require('../config/supabase');
 
-exports.registerTeam = async (req, res) => {
+const createTeam = async (req, res) => {
   try {
     const { name } = req.body;
-    const existing = await Team.findOne({ name });
 
-    if (existing) {
-      return res.status(400).json({ message: 'Team name already taken.' });
+    if (!name) {
+      return res.status(400).json({ error: '⚠️ Team name is required' });
     }
 
-    const team = new Team({ name });
-    await team.save();
+    const { data, error } = await supabase
+      .from('teams')
+      .insert([{ name }])
+      .select();
 
-    res.status(201).json(team);
+    if (error) {
+      if (error.message.includes('duplicate key value')) {
+        return res.status(400).json({ error: '⚠️ This team name already exists. Please choose another.' });
+      }
+      throw error;
+    }
+
+    res.status(201).json(data[0]);
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error });
+    console.error('❌ Supabase Insert Error:', error.message);
+    res.status(500).json({ error: '❌ Something went wrong. Please try again later.' });
   }
 };
-exports.getTeams = async (req, res) => {
+
+const getAllTeams = async (req, res) => {
   try {
-    const teams = await Team.find().sort({ score: -1 });
-    res.status(200).json(teams);
+    const { data, error } = await supabase
+      .from('teams')
+      .select('*')
+      .order('created_at', { ascending: true });
+
+    if (error) throw error;
+
+    res.status(200).json(data);
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error });
+    console.error('❌ Supabase Fetch Error:', error.message);
+    res.status(500).json({ error: '❌ Could not fetch teams' });
   }
 };
+
+module.exports = { createTeam, getAllTeams };
+// This code defines the team controller for handling team-related operations in an Express.js application.
+// It includes functions to create a team and retrieve all teams from a Supabase database.
