@@ -1,10 +1,21 @@
+// routes/teamRoutes.js
 const express = require('express');
 const router = express.Router();
-const { createTeam, getAllTeams } = require('../controllers/teamController');
+const {
+  createTeam,
+  getAllTeams,
+  updateTeamScore,
+} = require('../controllers/teamController');
 
-router.post('/', createTeam);    // ➕ إضافة فريق
-router.get('/', getAllTeams);    // 📥 جلب كل الفرق
+// ➕ إضافة فريق
+router.post('/', createTeam);
+
+// 📥 جلب كل الفرق
+router.get('/', getAllTeams);
+
+// 🔁 تحديث نقاط فريق (مع team_id في URL)
+router.put('/score/:team_id', updateTeamScore);
 
 module.exports = router;
 // This code defines the routes for team-related operations in an Express.js application.
-// It imports the necessary modules, sets up the routes for creating a team and retrieving all teams, and exports the router for use in the main application.
+// It imports the necessary modules, sets up the routes for creating a team, retrieving all teams, and updating a team's score, and exports the router for use in the main application.

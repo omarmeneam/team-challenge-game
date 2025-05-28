@@ -9,9 +9,14 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// routes
+// team routes
 const teamRoutes = require('./routes/teamRoutes');
 app.use('/api/teams', teamRoutes);
+
+// player routes
+const playerRoutes = require('./routes/playerRoutes');
+app.use('/api/players', playerRoutes);
+
 
 // start server directly
 const PORT = process.env.PORT || 5000;
