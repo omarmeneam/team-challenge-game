@@ -3,26 +3,26 @@ const supabase = require('../config/supabase');
 
 // ➕ إنشاء فريق
 const createTeam = async (req, res) => {
+  const { name } = req.body;
+
+  if (!name || name.trim() === '') {
+    return res.status(400).json({
+      success: false,
+      message: 'Team name is required',
+    });
+  }
+
   try {
-    const { name } = req.body;
-
-    if (!name || name.trim() === '') {
-      return res.status(400).json({
-        success: false,
-        message: '⚠️ Team name is required',
-      });
-    }
-
     const { data, error } = await supabase
       .from('teams')
       .insert([{ name: name.trim() }])
       .select();
 
     if (error) {
-      if (error.message.includes('duplicate key value')) {
+      if (error.code === '23505') {
         return res.status(400).json({
           success: false,
-          message: '⚠️ This team name already exists. Please choose another.',
+          message: 'Team name already exists',
         });
       }
       throw error;
@@ -30,20 +30,20 @@ const createTeam = async (req, res) => {
 
     res.status(201).json({
       success: true,
-      message: '✅ Team created successfully',
+      message: 'Team created successfully',
       data: data[0],
     });
   } catch (error) {
-    console.error('❌ Supabase Insert Error:', error.message);
+    console.error('Error creating team:', error.message);
     res.status(500).json({
       success: false,
-      message: '❌ Something went wrong. Please try again later.',
+      message: 'Failed to create team',
     });
   }
 };
 
 // 📥 جلب كل الفرق
-const getAllTeams = async (req, res) => {
+const getAllTeams = async (_req, res) => {
   try {
     const { data, error } = await supabase
       .from('teams')
@@ -54,31 +54,31 @@ const getAllTeams = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: '✅ Teams fetched successfully',
+      message: 'Teams fetched successfully',
       data,
     });
   } catch (error) {
-    console.error('❌ Supabase Fetch Error:', error.message);
+    console.error('Error fetching teams:', error.message);
     res.status(500).json({
       success: false,
-      message: '❌ Could not fetch teams',
+      message: 'Failed to fetch teams',
     });
   }
 };
 
-// 🔁 تحديث نقاط فريق
+// 🔁 تحديث نقاط الفريق
 const updateTeamScore = async (req, res) => {
+  const { score } = req.body;
+  const { team_id } = req.params;
+
+  if (!team_id || !Number.isInteger(score)) {
+    return res.status(400).json({
+      success: false,
+      message: '⚠️ team_id (in URL) and score (integer) are required',
+    });
+  }
+
   try {
-    const { score } = req.body;
-    const { team_id } = req.params;
-
-    if (!team_id || typeof score !== 'number') {
-      return res.status(400).json({
-        success: false,
-        message: '⚠️ team_id (in URL) and score (number) are required',
-      });
-    }
-
     const { data, error } = await supabase
       .from('teams')
       .update({ score })
@@ -90,20 +90,20 @@ const updateTeamScore = async (req, res) => {
     if (!data || data.length === 0) {
       return res.status(404).json({
         success: false,
-        message: '⚠️ Team not found',
+        message: 'Team not found',
       });
     }
 
     res.status(200).json({
       success: true,
-      message: '✅ Team score updated successfully',
+      message: 'Team score updated',
       data: data[0],
     });
   } catch (error) {
-    console.error('❌ Update Score Error:', error.message);
+    console.error('Error updating score:', error.message);
     res.status(500).json({
       success: false,
-      message: '❌ Something went wrong while updating score',
+      message: 'Failed to update score',
     });
   }
 };
