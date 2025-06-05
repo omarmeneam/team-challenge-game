@@ -1,0 +1,84 @@
+{
+  "game": {
+    "title": "لعبة تحدي الفريق",
+    "start": "ابدأ اللعبة",
+    "pause": "وقف",
+    "resume": "كمل",
+    "end": "خلص اللعبة",
+    "timeRemaining": "الوقت المتبقي",
+    "currentScore": "النقاط الحالية",
+    "streak": "التتابع",
+    "multiplier": "مضاعف {{multiplier}}x"
+  },
+  "team": {
+    "name": "اسم الفريق",
+    "create": "سوي فريق",
+    "join": "انضم للفريق",
+    "leave": "اطلع من الفريق",
+    "score": "النقاط",
+    "rank": "المركز",
+    "members": "الأعضاء"
+  },
+  "helpAids": {
+    "skip": "تخطى السؤال",
+    "fiftyFifty": "٥٠/٥٠",
+    "timeFreeze": "تجميد الوقت",
+    "remaining": "باقي {{count}}",
+    "used": "مستخدم",
+    "skipCooldown": "التخطي متاح بعد {{seconds}} ثانية",
+    "fiftyFiftyCooldown": "٥٠/٥٠ متاح بعد {{seconds}} ثانية",
+    "timeFreezeCooldown": "تجميد الوقت متاح بعد {{seconds}} ثانية"
+  },
+  "leaderboard": {
+    "title": "لوحة المتصدرين",
+    "rank": "المركز",
+    "team": "الفريق",
+    "score": "النقاط",
+    "streak": "التتابع",
+    "viewAll": "شوف كل الفرق",
+    "topTeams": "أفضل الفرق",
+    "yourRank": "مركزك",
+    "percentile": "أعلى {{value}}٪"
+  },
+  "achievements": {
+    "streakMaster": "بطل التتابع",
+    "perfectScore": "علامة كاملة",
+    "quickAnswer": "سريع كالبرق",
+    "helpAidPro": "محترف المساعدات",
+    "teamSpirit": "روح الفريق"
+  },
+  "social": {
+    "share": "شارك",
+    "shareScore": "شارك النتيجة",
+    "shareTeam": "شارك الفريق",
+    "inviteFriends": "عزم ربعك",
+    "copyLink": "انسخ الرابط",
+    "linkCopied": "تم نسخ الرابط!",
+    "shareMessage": "انضم لفريقنا {{teamName}} في لعبة تحدي الفريق! حاليا في المركز {{rank}} بـ {{score}} نقطة!"
+  },
+  "notifications": {
+    "title": "الإشعارات",
+    "settings": "إعدادات الإشعارات",
+    "enable": "فعل الإشعارات",
+    "enabled": "الإشعارات مفعلة",
+    "turnReminders": "تذكير الدور",
+    "scoreUpdates": "تحديثات النقاط",
+    "achievements": "الإنجازات",
+    "teamChallenges": "تحديات الفريق"
+  },
+  "errors": {
+    "general": "صار خطأ",
+    "network": "مشكلة في الشبكة",
+    "retry": "حاول مرة ثانية",
+    "refresh": "حدث الصفحة"
+  },
+  "actions": {
+    "submit": "أرسل",
+    "cancel": "إلغاء",
+    "confirm": "تأكيد",
+    "save": "حفظ",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "close": "سكر"
+  }
+}

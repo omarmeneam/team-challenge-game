@@ -5,7 +5,9 @@ const supabase = require('../config/supabase');
 const {
   createTeam,
   getAllTeams,
-  updateTeamScore,
+  updateScore,
+  useHelpAid,
+  getLeaderboard
 } = require('../controllers/teamController');
 
 // ➕ إضافة فريق
@@ -15,8 +17,12 @@ router.post('/', createTeam);
 router.get('/', getAllTeams);
 
 // 🔁 تحديث نقاط فريق (مع team_id في URL)
-router.put('/score/:team_id', updateTeamScore);
+router.put('/score/:id', updateScore);
+
+// 🎯 استخدام مساعدة
+router.put('/help-aid/:id', useHelpAid);
+
+// 🏆 جلب لوحة المتصدرين
+router.get('/leaderboard', getLeaderboard);
 
 module.exports = router;
-// This code defines the routes for team-related operations in an Express.js application.
-// It imports the necessary modules, sets up the routes for creating a team, retrieving all teams, and updating a team's score, and exports the router for use in the main application.

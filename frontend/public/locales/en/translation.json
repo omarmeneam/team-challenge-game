@@ -1,0 +1,84 @@
+{
+  "game": {
+    "title": "Team Challenge Game",
+    "start": "Start Game",
+    "pause": "Pause",
+    "resume": "Resume",
+    "end": "End Game",
+    "timeRemaining": "Time Remaining",
+    "currentScore": "Current Score",
+    "streak": "Streak",
+    "multiplier": "x{{multiplier}} Multiplier"
+  },
+  "team": {
+    "name": "Team Name",
+    "create": "Create Team",
+    "join": "Join Team",
+    "leave": "Leave Team",
+    "score": "Score",
+    "rank": "Rank",
+    "members": "Members"
+  },
+  "helpAids": {
+    "skip": "Skip Question",
+    "fiftyFifty": "50/50",
+    "timeFreeze": "Time Freeze",
+    "remaining": "{{count}} remaining",
+    "used": "Used",
+    "skipCooldown": "Skip available in {{seconds}}s",
+    "fiftyFiftyCooldown": "50/50 available in {{seconds}}s",
+    "timeFreezeCooldown": "Time Freeze available in {{seconds}}s"
+  },
+  "leaderboard": {
+    "title": "Leaderboard",
+    "rank": "Rank",
+    "team": "Team",
+    "score": "Score",
+    "streak": "Streak",
+    "viewAll": "View All Teams",
+    "topTeams": "Top Teams",
+    "yourRank": "Your Rank",
+    "percentile": "Top {{value}}%"
+  },
+  "achievements": {
+    "streakMaster": "Streak Master",
+    "perfectScore": "Perfect Score",
+    "quickAnswer": "Lightning Fast",
+    "helpAidPro": "Help Aid Pro",
+    "teamSpirit": "Team Spirit"
+  },
+  "social": {
+    "share": "Share",
+    "shareScore": "Share Score",
+    "shareTeam": "Share Team",
+    "inviteFriends": "Invite Friends",
+    "copyLink": "Copy Link",
+    "linkCopied": "Link Copied!",
+    "shareMessage": "Join our team {{teamName}} in Team Challenge Game! We're currently ranked {{rank}} with {{score}} points!"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "settings": "Notification Settings",
+    "enable": "Enable Notifications",
+    "enabled": "Notifications Enabled",
+    "turnReminders": "Turn Reminders",
+    "scoreUpdates": "Score Updates",
+    "achievements": "Achievements",
+    "teamChallenges": "Team Challenges"
+  },
+  "errors": {
+    "general": "Something went wrong",
+    "network": "Network error",
+    "retry": "Retry",
+    "refresh": "Refresh Page"
+  },
+  "actions": {
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete",
+    "close": "Close"
+  }
+}

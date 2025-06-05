@@ -1,28 +1,34 @@
-// controllers/teamController.js
 const supabase = require('../config/supabase');
 
-// ➕ إنشاء فريق
+// Create a new team
 const createTeam = async (req, res) => {
   const { name } = req.body;
 
   if (!name || name.trim() === '') {
     return res.status(400).json({
       success: false,
-      message: 'Team name is required',
+      message: 'Team name is required'
     });
   }
 
   try {
     const { data, error } = await supabase
       .from('teams')
-      .insert([{ name: name.trim() }])
+      .insert([{
+        name: name.trim(),
+        score: 0,
+        streak: 0,
+        skip_aids_remaining: 3,
+        fifty_fifty_aids_remaining: 3,
+        time_freeze_aids_remaining: 3
+      }])
       .select();
 
     if (error) {
       if (error.code === '23505') {
         return res.status(400).json({
           success: false,
-          message: 'Team name already exists',
+          message: 'Team name already exists'
         });
       }
       throw error;
@@ -31,79 +37,173 @@ const createTeam = async (req, res) => {
     res.status(201).json({
       success: true,
       message: 'Team created successfully',
-      data: data[0],
+      data: data[0]
     });
   } catch (error) {
     console.error('Error creating team:', error.message);
     res.status(500).json({
       success: false,
-      message: 'Failed to create team',
+      message: 'Failed to create team'
     });
   }
 };
 
-// 📥 جلب كل الفرق
+// Get all teams
 const getAllTeams = async (_req, res) => {
   try {
     const { data, error } = await supabase
       .from('teams')
       .select('*')
-      .order('created_at', { ascending: true });
+      .order('score', { ascending: false });
 
     if (error) throw error;
 
-    res.status(200).json({
+    res.json({
       success: true,
-      message: 'Teams fetched successfully',
-      data,
+      data
     });
   } catch (error) {
     console.error('Error fetching teams:', error.message);
     res.status(500).json({
       success: false,
-      message: 'Failed to fetch teams',
+      message: 'Failed to fetch teams'
     });
   }
 };
 
-// 🔁 تحديث نقاط الفريق
-const updateTeamScore = async (req, res) => {
-  const { score } = req.body;
-  const { team_id } = req.params;
+// Update team score with streak bonus
+const updateScore = async (req, res) => {
+  const { id } = req.params;
+  const { points, isCorrect } = req.body;
 
-  if (!team_id || !Number.isInteger(score)) {
+  if (!points || typeof isCorrect !== 'boolean') {
     return res.status(400).json({
       success: false,
-      message: '⚠️ team_id (in URL) and score (integer) are required',
+      message: 'Points and isCorrect status are required'
     });
   }
 
   try {
+    // First get current streak
+    const { data: team, error: fetchError } = await supabase
+      .from('teams')
+      .select('streak, score')
+      .eq('id', id)
+      .single();
+
+    if (fetchError) throw fetchError;
+
+    // Calculate new streak and score
+    const newStreak = isCorrect ? team.streak + 1 : 0;
+    const streakMultiplier = 1 + Math.min(team.streak, 5) * 0.2;
+    const scoreIncrement = isCorrect ? Math.floor(points * streakMultiplier) : 0;
+
+    // Update team
     const { data, error } = await supabase
       .from('teams')
-      .update({ score })
-      .eq('id', team_id)
-      .select();
+      .update({
+        score: team.score + scoreIncrement,
+        streak: newStreak
+      })
+      .eq('id', id)
+      .select()
+      .single();
 
     if (error) throw error;
 
-    if (!data || data.length === 0) {
-      return res.status(404).json({
-        success: false,
-        message: 'Team not found',
-      });
-    }
-
-    res.status(200).json({
+    res.json({
       success: true,
-      message: 'Team score updated',
-      data: data[0],
+      message: 'Score updated successfully',
+      data: {
+        ...data,
+        pointsEarned: scoreIncrement,
+        streakMultiplier
+      }
     });
   } catch (error) {
     console.error('Error updating score:', error.message);
     res.status(500).json({
       success: false,
-      message: 'Failed to update score',
+      message: 'Failed to update score'
+    });
+  }
+};
+
+// Use help aid
+const useHelpAid = async (req, res) => {
+  const { id } = req.params;
+  const { type } = req.body;
+
+  if (!['skip', 'fifty_fifty', 'time_freeze'].includes(type)) {
+    return res.status(400).json({
+      success: false,
+      message: 'Invalid help aid type'
+    });
+  }
+
+  const aidColumn = `${type}_aids_remaining`;
+
+  try {
+    // Check if aid is available
+    const { data: team, error: fetchError } = await supabase
+      .from('teams')
+      .select(aidColumn)
+      .eq('id', id)
+      .single();
+
+    if (fetchError) throw fetchError;
+
+    if (team[aidColumn] <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'No help aids remaining of this type'
+      });
+    }
+
+    // Use the aid
+    const { data, error } = await supabase
+      .from('teams')
+      .update({ [aidColumn]: team[aidColumn] - 1 })
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    res.json({
+      success: true,
+      message: 'Help aid used successfully',
+      data
+    });
+  } catch (error) {
+    console.error('Error using help aid:', error.message);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to use help aid'
+    });
+  }
+};
+
+// Get leaderboard
+const getLeaderboard = async (_req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from('teams')
+      .select('*')
+      .order('score', { ascending: false })
+      .limit(10);
+
+    if (error) throw error;
+
+    res.json({
+      success: true,
+      data
+    });
+  } catch (error) {
+    console.error('Error fetching leaderboard:', error.message);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch leaderboard'
     });
   }
 };
@@ -111,7 +211,7 @@ const updateTeamScore = async (req, res) => {
 module.exports = {
   createTeam,
   getAllTeams,
-  updateTeamScore,
+  updateScore,
+  useHelpAid,
+  getLeaderboard
 };
-// This code defines the team controller for handling team-related operations in an Express.js application.
-// It includes functions to create a team, retrieve all teams, and update a team's score in a Supabase database.

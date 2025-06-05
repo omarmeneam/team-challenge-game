@@ -1,9 +1,19 @@
 const express = require('express');
-const { getRandomQuestion } = require('../controllers/questionController');
+const {
+  getQuestionsByDifficulty,
+  applyFiftyFifty,
+  skipQuestion
+} = require('../controllers/questionController');
 
 const router = express.Router();
 
-router.get('/random', getRandomQuestion);
+// 📝 Get questions by difficulty
+router.get('/', getQuestionsByDifficulty);
+
+// 5️⃣0️⃣ Apply fifty-fifty help aid
+router.post('/fifty-fifty/:id', applyFiftyFifty);
+
+// ⏭️ Skip current question
+router.post('/skip', skipQuestion);
 
 module.exports = router;
-// This code sets up an Express router for handling question-related routes.
